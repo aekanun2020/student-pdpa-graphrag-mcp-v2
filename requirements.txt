@@ -1,0 +1,10 @@
+# Exact versions the published results were produced with (tested 2026-11-14, linux/arm64).
+# Everything these pull in is fixed in constraints.txt. To try newer versions, change both files and re-run eval/.
+mcp[cli]==1.30.0   # mcp 2.x renamed FastMCP to MCPServer; this server uses the 1.x API
+FlagEmbedding==1.4.2
+transformers==4.57.6
+qdrant-client==1.20.0
+networkx==3.6.1
+requests==2.34.2
+numpy==2.4.6
+torch==2.15.0
