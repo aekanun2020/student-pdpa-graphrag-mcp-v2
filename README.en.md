@@ -31,7 +31,6 @@ and the embedding model is multilingual.
 **Day-2 labs in the course**
 
 - LAB 4, test the MCP tools with curl: section [LAB 4](#lab-4-testing-the-mcp-tools-with-curl)
-- LAB 5, read the output of `search_pdpa`: section [LAB 5](#lab-5-reading-the-output-of-search_pdpa)
 
 ## What changed from the original
 
@@ -350,7 +349,7 @@ export MCP_SERVER_URL=<URL from the instructor>/mcp
 Expected: 5 tool names, 2 penalties for `sec_26`, and `keywords` with at most 8 `low_level` and at most 6 `high_level` entries.
 The `search_pdpa` part of the script prints only `keywords`; it does not show the context the server returns.
 
-**Step 2: call `search_pdpa` yourself and save the whole result to a file.** LAB 5 uses this file. The `build/` folder is not tracked by git.
+**Step 2: call `search_pdpa` yourself and save the whole result to a file.** Step 3 uses this file. The `build/` folder is not tracked by git.
 
 ```bash
 mkdir -p build
@@ -370,39 +369,25 @@ This step makes one LLM call for keyword extraction, so it takes longer than the
 **If `low_level` is the question itself and `high_level` is empty,** the server's LLM call failed in that run and the server used the question split on spaces instead of keywords.
 The server reports no error in this case. Run the command again; if it stays the same, check `OPENROUTER_API_KEY` in `.env`.
 
-On Windows, run every command of this lab in Git Bash (not tested on Windows).
-
-## LAB 5: Reading the output of search_pdpa
-
-This lab makes no further server calls. It uses `build/lab4_search.json` from step 2 of LAB 4 to see that the context returned by `search_pdpa`
-comes from both semantic (vector) search and multi-hop graph traversal, following the steps in [How retrieval works](#how-retrieval-works).
-
-Extract the context into a text file and list the headings of its parts:
+**Step 3: look at the 3 parts of the context.** This step makes no further server calls. Extract the context into a text file and list the headings of its parts:
 
 ```bash
 jq -r '.context' build/lab4_search.json > build/lab4_context.txt
 grep -n '^## \|^### ' build/lab4_context.txt
 ```
 
-The context has 3 parts (the headings are in Thai):
-
-| Part | Heading in the file | Comes from |
+| Part | Heading in the file (in Thai) | Which step of [How retrieval works](#how-retrieval-works) it comes from |
 |---|---|---|
 | 1 | `## ความรู้จาก Knowledge Graph (PDPA)` | the profiles found (retrieval step 2); each entry starts with `- ` followed by a node id |
 | 2 | `### ข้อมูลเชื่อมโยง (multi-hop graph):` | graph traversal from the seeds (retrieval steps 3 and 4); each line starts with `[hop1]` or `[hop2]` |
 | 3 | `## เนื้อหาต้นฉบับ PDPA (Original Text)` | full text of the sections found (retrieval step 5) |
 
+Parts 1 and 3 come from semantic (vector) search and part 2 from graph traversal, so the context is hybrid.
+
 How to read a line of part 2: `[hop1] sec26_ex1 ←GRANTS_EXEMPTION— sec_26` means the walk went from node `sec26_ex1` to `sec_26` in 1 hop
 over a `GRANTS_EXEMPTION` edge. The arrow follows the edge's direction in the graph; here the edge points from `sec_26` to `sec26_ex1`, so the walk went against the arrow.
 
-Questions, to be answered from your own file:
-
-- a. How many profiles are in part 1, and does that match `profile_results_count`?
-- b. In the first `[hop1]` line, which node does the walk start from, which node does it reach, over which edge type, and with or against the arrow?
-- c. Find one section that appears in a `[hop2]` line but is not among the full texts of part 3. How did that section get into the context?
-- d. If part 2 were removed, what would the agent lack when answering a question about the exemptions of section 26?
-
-You may ask an AI such as ChatGPT to help read the file: attach `build/lab4_context.txt`, ask the questions above, then check the AI's answers against the file yourself.
+On Windows, run every command of this lab in Git Bash (not tested on Windows).
 
 ## Known limitations
 
