@@ -25,6 +25,11 @@ vector search หามาตราที่เป็นข้อห้ามเ
 - LAB 2 วิเคราะห์ไฟล์กราฟ: หัวข้อ [LAB 2](#lab-2-อ่านและวิเคราะห์ไฟล์กราฟ) และ [ผลทีละขั้น](docs/lab2-walkthrough.md)
 - LAB 3 สร้างกราฟ: หัวข้อ [LAB 3: สร้างและตรวจกราฟใหม่](#lab-3-สร้างและตรวจกราฟใหม่) และ [ผลทีละขั้น](docs/lab3-walkthrough.md)
 
+**LAB ของวันที่ 2 ในคอร์ส**
+
+- LAB 4 ทดสอบ MCP tools ด้วย curl: หัวข้อ [LAB 4](#lab-4-ทดสอบ-mcp-tools-ด้วย-curl)
+- LAB 5 อ่านผลของ `search_pdpa`: หัวข้อ [LAB 5](#lab-5-อ่านผลของ-search_pdpa)
+
 ## สิ่งที่ต่างจาก repo เดิม
 
 | เรื่อง | repo เดิม | repo นี้ |
@@ -300,6 +305,81 @@ cmp build/pdpa_knowledge_graph.json data/pdpa_knowledge_graph.json   # ไม่
 
 ถ้าจะใช้กับกฎหมายฉบับอื่น ให้เปลี่ยน pattern ของหัวข้อ (`Article\s+(\d+)` สำหรับ GDPR,
 `第([一二三四五六七八九十百]+)条` สำหรับ APPI ของญี่ปุ่น) แล้วคัดเลือกโหนดเชิงความหมายใหม่
+
+## LAB 4: ทดสอบ MCP tools ด้วย curl
+
+LAB นี้คุยกับ MCP server โดยตรงด้วย `curl` ไม่ผ่าน agent เพื่อให้เห็นคำขอและคำตอบแบบ JSON-RPC ของ `tools/list` และ `tools/call`
+
+สิ่งที่ต้องมี: โฟลเดอร์ของ repo นี้ คำสั่ง `curl` กับ `jq` และ MCP server ที่พร้อมใช้ คือ server ที่เริ่มไว้ตาม
+[LAB 1: เริ่มใช้งาน](#lab-1-เริ่มใช้งาน) หรือ server ที่ผู้สอนเปิดให้
+ถ้าใช้ server ของผู้สอน ให้ตั้งค่า URL ก่อน 1 ครั้งใน terminal ที่จะใช้ทำ LAB:
+
+```bash
+export MCP_SERVER_URL=<URL ที่ผู้สอนให้>/mcp
+```
+
+**ขั้นที่ 1 รันสคริปต์** [`examples/mcp_curl.sh`](examples/mcp_curl.sh) ส่งคำขอ 3 ครั้ง คือ `tools/list`, `get_penalty` ของมาตรา 26 และ `search_pdpa`
+
+```bash
+./examples/mcp_curl.sh
+```
+
+ผลที่ควรเห็น: ชื่อ tool 5 ตัว โทษของ `sec_26` 2 รายการ และ `keywords` ที่มี `low_level` ไม่เกิน 8 คำ กับ `high_level` ไม่เกิน 6 คำ
+ส่วนของ `search_pdpa` ในสคริปต์พิมพ์เฉพาะ `keywords` ยังไม่ได้แสดง context ที่ server ส่งกลับ
+
+**ขั้นที่ 2 เรียก `search_pdpa` เอง แล้วเก็บผลทั้งก้อนลงไฟล์** ไฟล์นี้ใช้ต่อใน LAB 5 โฟลเดอร์ `build/` ไม่ถูก git ติดตาม
+
+```bash
+mkdir -p build
+curl -s -X POST "${MCP_SERVER_URL:-http://localhost:8100/mcp}" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search_pdpa","arguments":{"query":"เก็บข้อมูลชีวภาพ ลายนิ้วมือ ข้อมูลอ่อนไหว","top_k":5}}}' \
+  | jq '.result.content[0].text | fromjson' > build/lab4_search.json
+jq '{keywords, profile_results_count, chunk_results_count}' build/lab4_search.json
+```
+
+คำสั่งสุดท้ายพิมพ์คีย์เวิร์ด จำนวน profile (`profile_results_count`) และจำนวนตัวบทเต็ม (`chunk_results_count`)
+ขั้นนี้เรียก LLM 1 ครั้งเพื่อแตกคีย์เวิร์ด จึงใช้เวลานานกว่าคำสั่งอื่น (การทดสอบ 2 ครั้งใช้ 7 และ 42 วินาที)
+
+**ผลแต่ละรอบต่างกันได้:** คีย์เวิร์ดมาจาก LLM ซึ่งไม่คงที่ จำนวนคีย์เวิร์ด จำนวน profile และลำดับของมาตราจึงต่างจากของเพื่อนหรือจากสไลด์ได้
+
+**ถ้า `low_level` เป็นคำถามเดิมและ `high_level` ว่าง** แปลว่ารอบนั้น server เรียก LLM ไม่สำเร็จ แล้วใช้คำถามที่ตัดตามช่องว่างแทนคีย์เวิร์ด
+server ไม่แจ้งข้อผิดพลาดในกรณีนี้ ให้รันคำสั่งซ้ำ ถ้ายังเป็นเหมือนเดิม ให้ตรวจ `OPENROUTER_API_KEY` ในไฟล์ `.env`
+
+บน Windows ให้รันทุกคำสั่งของ LAB นี้ใน Git Bash (ยังไม่ได้ทดสอบบน Windows)
+
+## LAB 5: อ่านผลของ search_pdpa
+
+LAB นี้ไม่เรียก server เพิ่ม ใช้ไฟล์ `build/lab4_search.json` จากขั้นที่ 2 ของ LAB 4 เพื่อดูว่า context ที่ `search_pdpa` ส่งกลับ
+มาจากทั้งการค้นด้วยความหมาย (vector) และการเดินกราฟหลายทอด (multi-hop) ตามขั้นตอนในหัวข้อ [การค้นทำงานอย่างไร](#การค้นทำงานอย่างไร)
+
+แยก context ออกมาเป็นไฟล์ข้อความ แล้วดูหัวข้อของแต่ละส่วน:
+
+```bash
+jq -r '.context' build/lab4_search.json > build/lab4_context.txt
+grep -n '^## \|^### ' build/lab4_context.txt
+```
+
+context มี 3 ส่วน
+
+| ส่วน | หัวข้อในไฟล์ | มาจากขั้นใด |
+|---|---|---|
+| 1 | `## ความรู้จาก Knowledge Graph (PDPA)` | profile ที่ค้นเจอ (ขั้นที่ 2 ของการค้น) แต่ละรายการขึ้นต้นด้วย `- ` ตามด้วย id ของโหนด |
+| 2 | `### ข้อมูลเชื่อมโยง (multi-hop graph):` | ผลเดินกราฟจาก seed (ขั้นที่ 3 และ 4 ของการค้น) แต่ละบรรทัดขึ้นต้นด้วย `[hop1]` หรือ `[hop2]` |
+| 3 | `## เนื้อหาต้นฉบับ PDPA (Original Text)` | ตัวบทเต็มของมาตราที่ค้นเจอ (ขั้นที่ 5 ของการค้น) |
+
+วิธีอ่านบรรทัดของส่วนที่ 2: `[hop1] sec26_ex1 ←GRANTS_EXEMPTION— sec_26` แปลว่าเดินจากโหนด `sec26_ex1` ไปถึง `sec_26` ใน 1 ทอด
+ผ่านเส้นประเภท `GRANTS_EXEMPTION` ลูกศรชี้ตามทิศของเส้นในกราฟ ในตัวอย่างนี้เส้นชี้จาก `sec_26` มาหา `sec26_ex1` การเดินจึงย้อนทิศลูกศร
+
+คำถาม ให้ตอบจากไฟล์ของตัวเอง
+
+- ก. ส่วนที่ 1 มี profile กี่รายการ และตรงกับ `profile_results_count` หรือไม่
+- ข. บรรทัด `[hop1]` บรรทัดแรก เดินจากโหนดใดไปถึงโหนดใด ผ่านเส้นประเภทใด และเดินตามหรือย้อนทิศลูกศร
+- ค. หามาตรา 1 มาตราที่ปรากฏในบรรทัด `[hop2]` แต่ไม่อยู่ในตัวบทเต็มของส่วนที่ 3 มาตรานี้เข้ามาอยู่ใน context ได้ด้วยวิธีใด
+- ง. ถ้าตัดส่วนที่ 2 ออก agent จะขาดข้อมูลอะไรในการตอบคำถามเรื่องข้อยกเว้นของมาตรา 26
+
+จะให้ AI เช่น ChatGPT ช่วยอ่านก็ได้ โดยแนบไฟล์ `build/lab4_context.txt` แล้วถามคำถามข้างบน จากนั้นตรวจคำตอบของ AI กับไฟล์ด้วยตัวเอง
 
 ## ข้อจำกัดที่ทราบ
 
