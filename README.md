@@ -242,6 +242,8 @@ python3 labs/lab2/explore_graph.py --step 3       # ดูเฉพาะขั�
 
 บน Windows ใช้ `python` แทน `python3` สคริปต์พิมพ์ผลเป็น UTF-8 ทุกระบบ
 
+ผลของทุกขั้นพร้อมภาพ ดูที่ [docs/lab2-walkthrough.md](docs/lab2-walkthrough.md)
+
 | ขั้น | สิ่งที่พิมพ์ |
 |---|---|
 | 1 | จำนวนโหนดและเส้นที่นับจากข้อมูล เทียบกับ `metadata` (190 / 382) |

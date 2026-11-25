@@ -262,6 +262,8 @@ python3 labs/lab2/explore_graph.py --step 3       # show step 3 only
 
 On Windows use `python` instead of `python3`. The script writes UTF-8 on every platform.
 
+Output of every step, with images (in Thai): [docs/lab2-walkthrough.md](docs/lab2-walkthrough.md)
+
 | Step | What it prints |
 |---|---|
 | 1 | node and edge counts taken from the data, next to the `metadata` block (190 / 382) |
