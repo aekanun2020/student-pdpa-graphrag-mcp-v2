@@ -24,9 +24,9 @@ and the embedding model is multilingual.
 
 **Day-1 labs of the course**
 
-- LAB 1, install the system: section [Quick start](#quick-start)
+- LAB 1, install the system: section [LAB 1: Quick start](#lab-1-quick-start)
 - LAB 2, analyse the graph file: section [LAB 2](#lab-2-reading-and-analysing-the-graph-file) and the [step-by-step output](docs/lab2-walkthrough.md) (in Thai)
-- LAB 3, build the graph: section [Rebuilding and validating the graph](#rebuilding-and-validating-the-graph) and the [step-by-step output](docs/lab3-walkthrough.md) (in Thai)
+- LAB 3, build the graph: section [LAB 3: Rebuilding and validating the graph](#lab-3-rebuilding-and-validating-the-graph) and the [step-by-step output](docs/lab3-walkthrough.md) (in Thai)
 
 ## What changed from the original
 
@@ -99,7 +99,9 @@ on 20 Nov 2026 and the search pipeline figure on 21 Nov 2026.
 - **LLM on the server side** (configured by `LLM_MODEL` through OpenRouter; `.env.example` sets it to `gpt-oss-120b`, the model the author uses) is used for exactly one thing, extracting search keywords. Answers are
   written by the agent's own model: *the server retrieves, the agent reasons.*
 
-## Quick start
+<a id="quick-start"></a>
+
+## LAB 1: Quick start
 
 Requirements: Docker with Compose and an [OpenRouter](https://openrouter.ai) API key.
 
@@ -282,9 +284,11 @@ Output of every step, with images (in Thai): [docs/lab2-walkthrough.md](docs/lab
 In the JSON file `source` and `target` are properties of an edge. Step 6 shows that after loading into NetworkX
 they become the two ends of the edge, so the edge attributes that remain are `relationship` and `order`.
 
-## Rebuilding and validating the graph
+<a id="rebuilding-and-validating-the-graph"></a>
 
-Run these in the venv created under "Quick start". `build_graph.py` uses only the Python standard
+## LAB 3: Rebuilding and validating the graph
+
+Run these in the venv created under "LAB 1: Quick start". `build_graph.py` uses only the Python standard
 library; `validate_graph.py` also needs `networkx`.
 
 ```bash
