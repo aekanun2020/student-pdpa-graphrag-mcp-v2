@@ -30,7 +30,7 @@ and the embedding model is multilingual.
 
 **Day-2 labs in the course**
 
-- LAB 4, test the MCP tools with curl: section [LAB 4](#lab-4-testing-the-mcp-tools-with-curl)
+- LAB 4, test the MCP tools with curl: section [LAB 4](#lab-4-testing-the-mcp-tools-with-curl) and the [step-by-step output](docs/lab4-walkthrough.md) (in Thai)
 
 ## What changed from the original
 
@@ -80,7 +80,7 @@ README.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [LAB 8 agent](labs/lab8/agent_pdpa_mcp.py) and [curl smoke test](examples/mcp_curl.sh)
 - [Architecture figure](docs/fig1_architecture.png), [search pipeline figure](docs/fig3_search_pipeline.png) and [figure generator](docs/figures/make_figures.py)
 
-`labs/` contains the LAB 2 script and the agent-side code for LAB 8; the course slides are not part of this repo; the step-by-step output of LAB 2 and LAB 3 is in `docs/`.
+`labs/` contains the LAB 2 script and the agent-side code for LAB 8; the course slides are not part of this repo; the step-by-step output of LAB 2, LAB 3 and LAB 4 is in `docs/`.
 
 ## Architecture
 
@@ -388,6 +388,8 @@ How to read a line of part 2: `[hop1] sec26_ex1 ←GRANTS_EXEMPTION— sec_26` m
 over a `GRANTS_EXEMPTION` edge. The arrow follows the edge's direction in the graph; here the edge points from `sec_26` to `sec26_ex1`, so the walk went against the arrow.
 
 On Windows, run every command of this lab in Git Bash (not tested on Windows).
+
+Output of every step, with images (in Thai): [docs/lab4-walkthrough.md](docs/lab4-walkthrough.md)
 
 ## Known limitations
 

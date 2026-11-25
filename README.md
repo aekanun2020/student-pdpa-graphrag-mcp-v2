@@ -27,7 +27,7 @@ vector search หามาตราที่เป็นข้อห้ามเ
 
 **LAB ของวันที่ 2 ในคอร์ส**
 
-- LAB 4 ทดสอบ MCP tools ด้วย curl: หัวข้อ [LAB 4](#lab-4-ทดสอบ-mcp-tools-ด้วย-curl)
+- LAB 4 ทดสอบ MCP tools ด้วย curl: หัวข้อ [LAB 4](#lab-4-ทดสอบ-mcp-tools-ด้วย-curl) และ [ผลทีละขั้น](docs/lab4-walkthrough.md)
 
 ## สิ่งที่ต่างจาก repo เดิม
 
@@ -77,7 +77,7 @@ README.en.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [agent ของ LAB 8](labs/lab8/agent_pdpa_mcp.py) และ [ทดสอบด้วย curl](examples/mcp_curl.sh)
 - [ภาพสถาปัตยกรรม](docs/fig1_architecture.png), [ภาพขั้นตอนค้น](docs/fig3_search_pipeline.png) และ [สคริปต์สร้างภาพ](docs/figures/make_figures.py)
 
-`labs/` มีสคริปต์ของ LAB 2 และโค้ดฝั่ง agent ของ LAB 8 สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2 และ LAB 3 อยู่ใน `docs/`
+`labs/` มีสคริปต์ของ LAB 2 และโค้ดฝั่ง agent ของ LAB 8 สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2, LAB 3 และ LAB 4 อยู่ใน `docs/`
 
 ## สถาปัตยกรรม
 
@@ -365,6 +365,8 @@ grep -n '^## \|^### ' build/lab4_context.txt
 ผ่านเส้นประเภท `GRANTS_EXEMPTION` ลูกศรชี้ตามทิศของเส้นในกราฟ ในตัวอย่างนี้เส้นชี้จาก `sec_26` มาหา `sec26_ex1` การเดินจึงย้อนทิศลูกศร
 
 บน Windows ให้รันทุกคำสั่งของ LAB นี้ใน Git Bash (ยังไม่ได้ทดสอบบน Windows)
+
+ผลของทุกขั้นพร้อมภาพ ดูที่ [docs/lab4-walkthrough.md](docs/lab4-walkthrough.md)
 
 ## ข้อจำกัดที่ทราบ
 
