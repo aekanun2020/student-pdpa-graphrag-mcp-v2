@@ -22,6 +22,12 @@ and penalties are the second half and are found by walking the graph.
 The example is Thai law, but the structure is the same for GDPR, HIPAA, the CCPA or Japan's APPI,
 and the embedding model is multilingual.
 
+**Day-1 labs of the course**
+
+- LAB 1, install the system: section [Quick start](#quick-start)
+- LAB 2, analyse the graph file: section [LAB 2](#lab-2-reading-and-analysing-the-graph-file) and the [step-by-step output](docs/lab2-walkthrough.md) (in Thai)
+- LAB 3, build the graph: section [Rebuilding and validating the graph](#rebuilding-and-validating-the-graph) and the [step-by-step output](docs/lab3-walkthrough.md) (in Thai)
+
 ## What changed from the original
 
 | Area | Original | This version |
@@ -70,7 +76,7 @@ README.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [LAB 8 agent](labs/lab8/agent_pdpa_mcp.py) and [curl smoke test](examples/mcp_curl.sh)
 - [Architecture figure](docs/fig1_architecture.png), [search pipeline figure](docs/fig3_search_pipeline.png) and [figure generator](docs/figures/make_figures.py)
 
-`labs/` contains the LAB 2 script and the agent-side code for LAB 8; the course lab instructions are not part of this repo.
+`labs/` contains the LAB 2 script and the agent-side code for LAB 8; the course slides are not part of this repo; the step-by-step output of LAB 2 and LAB 3 is in `docs/`.
 
 ## Architecture
 
@@ -286,6 +292,7 @@ pip install networkx                     # used only by validate_graph.py
 python scripts/build_graph.py            # -> build/ (never overwrites data/)
 python scripts/validate_graph.py         # checks data/pdpa_knowledge_graph.json
 python scripts/validate_graph.py build/pdpa_knowledge_graph.json
+cmp build/pdpa_knowledge_graph.json data/pdpa_knowledge_graph.json   # prints nothing = byte-identical
 ```
 
 [`build_graph.py`](scripts/build_graph.py) uses no LLM and needs no API key; it is entirely

@@ -19,6 +19,12 @@ vector search หามาตราที่เป็นข้อห้ามเ
 ตัวอย่างเป็นกฎหมายไทย แต่โครงสร้างเดียวกันใช้ได้กับ GDPR, HIPAA, CCPA หรือ APPI ของญี่ปุ่น
 และ embedding model ที่ใช้รองรับหลายภาษา
 
+**LAB ของวันแรกในคอร์ส**
+
+- LAB 1 ติดตั้งระบบ: หัวข้อ [เริ่มใช้งาน](#เริ่มใช้งาน)
+- LAB 2 วิเคราะห์ไฟล์กราฟ: หัวข้อ [LAB 2](#lab-2-อ่านและวิเคราะห์ไฟล์กราฟ) และ [ผลทีละขั้น](docs/lab2-walkthrough.md)
+- LAB 3 สร้างกราฟ: หัวข้อ [สร้างและตรวจกราฟใหม่](#สร้างและตรวจกราฟใหม่) และ [ผลทีละขั้น](docs/lab3-walkthrough.md)
+
 ## สิ่งที่ต่างจาก repo เดิม
 
 | เรื่อง | repo เดิม | repo นี้ |
@@ -67,7 +73,7 @@ README.en.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [agent ของ LAB 8](labs/lab8/agent_pdpa_mcp.py) และ [ทดสอบด้วย curl](examples/mcp_curl.sh)
 - [ภาพสถาปัตยกรรม](docs/fig1_architecture.png), [ภาพขั้นตอนค้น](docs/fig3_search_pipeline.png) และ [สคริปต์สร้างภาพ](docs/figures/make_figures.py)
 
-`labs/` มีสคริปต์ของ LAB 2 และโค้ดฝั่ง agent ของ LAB 8 เอกสารประกอบ lab ของคอร์สไม่ได้อยู่ใน repo นี้
+`labs/` มีสคริปต์ของ LAB 2 และโค้ดฝั่ง agent ของ LAB 8 สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2 และ LAB 3 อยู่ใน `docs/`
 
 ## สถาปัตยกรรม
 
@@ -266,6 +272,7 @@ pip install networkx                     # ใช้โดย validate_graph.py 
 python scripts/build_graph.py            # -> build/ (ไม่เขียนทับ data/)
 python scripts/validate_graph.py         # ตรวจ data/pdpa_knowledge_graph.json
 python scripts/validate_graph.py build/pdpa_knowledge_graph.json
+cmp build/pdpa_knowledge_graph.json data/pdpa_knowledge_graph.json   # ไม่พิมพ์อะไร = ตรงกันทุกไบต์
 ```
 
 [`build_graph.py`](scripts/build_graph.py) ไม่ใช้ LLM และไม่ต้องมี API key ทำงานด้วยกฎทั้งหมด: regex ตัวหนึ่งหาหัวมาตราใน

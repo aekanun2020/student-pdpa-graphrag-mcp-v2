@@ -87,3 +87,24 @@ cmp build/pdpa_knowledge_graph.json data/pdpa_knowledge_graph.json
 | เทียบด้วย `cmp` | ไม่พิมพ์อะไร | ไม่พิมพ์อะไร | ข้อ 4 |
 
 ผลตรงกับสไลด์ทุกรายการ
+
+## สำหรับ Windows (ยังไม่ได้ทดสอบ)
+
+ขั้นตอนในหัวข้อนี้เขียนจากความรู้ทั่วไปเรื่อง Git for Windows ยังไม่ได้ทดสอบบนเครื่อง Windows จริง ถ้าผลบนเครื่องของคุณต่างจากที่เขียนไว้ ให้แจ้งผู้สอน
+
+Command Prompt ของ Windows ไม่มีคำสั่ง `cmp` ให้ใช้โปรแกรม Git Bash ซึ่งติดตั้งมาพร้อม Git แทน Command Prompt แล้วพิมพ์คำสั่งเดิมใน Git Bash
+
+1. เปิดเมนู Start พิมพ์ `Git Bash` แล้วเปิดโปรแกรม
+2. เข้าโฟลเดอร์ของ repo ด้วยคำสั่ง `cd` ตามด้วย path ที่ clone ไว้ เช่น `cd ~/student-pdpa-graphrag-mcp-v2`
+3. รันคำสั่งของ LAB 3 ตามลำดับเดิม โดยใช้ `python` แทน `python3`
+
+```sh
+python scripts/build_graph.py
+python -m pip install networkx
+python scripts/validate_graph.py build/pdpa_knowledge_graph.json
+cmp build/pdpa_knowledge_graph.json data/pdpa_knowledge_graph.json
+```
+
+ผลของ 3 คำสั่งแรกควรตรงกับภาพในข้อ 2 และ 3
+
+**ข้อควรรู้เรื่อง `cmp` บน Windows:** ถ้า `cmp` พิมพ์ว่าไฟล์ต่างกัน (มีคำว่า `differ`) ทั้งที่ผลของคำสั่งอื่นตรงกับเอกสารนี้ สาเหตุที่เป็นไปได้คือรูปแบบท้ายบรรทัดของไฟล์ ไม่ใช่กราฟผิด บน Windows สคริปต์เขียนไฟล์ด้วยท้ายบรรทัดแบบ Windows (CRLF) ส่วนไฟล์ใน `data/` อาจมีท้ายบรรทัดแบบ LF หรือ CRLF ขึ้นกับการตั้งค่า `core.autocrlf` ของ Git ตอน clone ข้อนี้เป็นการคาด ยังไม่ได้ทดสอบ
