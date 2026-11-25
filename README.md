@@ -282,6 +282,8 @@ python scripts/validate_graph.py build/pdpa_knowledge_graph.json
 `build/pdpa_knowledge_graph.json` จาก LAB 3 ตรงกันทุกไบต์ รวมลำดับข้อมูลและ `metadata`
 ซึ่งระบุ 190 โหนด / 382 เส้น / เส้น 26 ประเภท กราฟนี้ให้ 572 profiles และ Markdown ให้ 96 chunks
 
+ผลของทุกขั้นพร้อมภาพ ดูที่ [docs/lab3-walkthrough.md](docs/lab3-walkthrough.md)
+
 ใน [`.env.example`](.env.example) มี `USE_LLM_EXTRACT` (ค่าเริ่มต้น `false`) สำหรับให้ LLM สกัดโหนดเพิ่มตอน server เริ่มทำงาน
 กราฟที่ให้มาและทุก LAB ไม่ได้ใช้ทางนี้
 

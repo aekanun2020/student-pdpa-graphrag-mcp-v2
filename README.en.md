@@ -308,6 +308,8 @@ output `build/pdpa_knowledge_graph.json` are byte-for-byte identical, including 
 `metadata` (190 nodes / 382 edges / 26 edge types). This graph provides 572 profiles, and the
 Markdown provides 96 chunks.
 
+Output of every step, with images (in Thai): [docs/lab3-walkthrough.md](docs/lab3-walkthrough.md)
+
 To use this on another statute, swap the heading pattern (`Article\s+(\d+)` for GDPR,
 `第([一二三四五六七八九十百]+)条` for Japan's APPI) and re-curate the semantic nodes.
 
