@@ -32,6 +32,10 @@ and the embedding model is multilingual.
 
 - LAB 4, test the MCP tools with curl: section [LAB 4](#lab-4-testing-the-mcp-tools-with-curl) and the [step-by-step output](docs/lab4-walkthrough.md) (in Thai)
 
+**Day-3 labs in the course**
+
+- LAB 5, build an agent connected to the MCP server: section [LAB 5](#lab-5-building-an-agent-connected-to-the-mcp-server)
+
 Windows users new to Git: see the [Git Bash on Windows guide](docs/git-bash-windows.md) (in Thai; not yet tested on Windows)
 
 ## What changed from the original
@@ -80,10 +84,10 @@ README.md, LICENSE
 
 - [LAB 2 graph](data/pdpa_knowledge_graph.json), [LAB 2 script](labs/lab2/explore_graph.py) and [statute text, all 96 sections](data/pdpa_full_text_v2.md)
 - [LAB 3 graph builder](scripts/build_graph.py) and [graph validator](scripts/validate_graph.py)
-- [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [LAB 8 agent](labs/lab8/agent_pdpa_mcp.py) and [curl smoke test](examples/mcp_curl.sh)
+- [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [LAB 5 agent](labs/lab8/agent_pdpa_mcp.py) and [curl smoke test](examples/mcp_curl.sh)
 - [Architecture figure](docs/fig1_architecture.png), [search pipeline figure](docs/fig3_search_pipeline.png) and [figure generator](docs/figures/make_figures.py)
 
-`labs/` contains the LAB 2 script, the LAB 4 script for Windows and the agent-side code for LAB 8; the course slides are not part of this repo; the step-by-step output of LAB 2, LAB 3 and LAB 4 is in `docs/`.
+`labs/` contains the LAB 2 script, the LAB 4 script for Windows and the agent-side code for LAB 5 (in the folder `labs/lab8/`); the course slides are not part of this repo; the step-by-step output of LAB 2, LAB 3 and LAB 4 is in `docs/`.
 
 ## Architecture
 
@@ -364,6 +368,44 @@ python labs/lab4/call_tools.py --url <URL from the instructor>/mcp
 If you use the server you started in LAB 1, leave out `--url`.
 
 Output of every step, with images (in Thai): [docs/lab4-walkthrough.md](docs/lab4-walkthrough.md)
+
+## LAB 5: Building an agent connected to the MCP server
+
+This lab runs the Python agent in [`labs/lab8/agent_pdpa_mcp.py`](labs/lab8/agent_pdpa_mcp.py). The agent asks the MCP server for its tool list,
+then lets the model call tools in a loop until it has an answer. The folder name `lab8` is the code's original name and does not match the lab number.
+
+You need:
+
+- this repo's folder, and Python
+- a `.env` file with `OPENROUTER_API_KEY` (copy `.env.example` to `.env` and fill in the key); the agent-side model spends this key's credit
+- a running MCP server: the one you started in [LAB 1: Quick start](#lab-1-quick-start), or one the instructor runs for the class.
+  For the instructor's server, change this line in `.env`:
+
+```bash
+MCP_SERVER_URL=<URL from the instructor>/mcp
+```
+
+**Run the agent** from the repo folder:
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements-agent.txt
+python labs/lab8/agent_pdpa_mcp.py "เก็บข้อมูลสุขภาพพนักงานได้ไหม ถ้าฝ่าฝืนมีโทษอะไร"
+```
+
+If your machine has no `python` command, use `python3` in the first line.
+
+Expected output: the line `[MCP] ค้นพบ 5 tools`, then `[step n] THINK` and `TOOL_USE` lines for each round,
+ending with `[step n] END_TURN` and the answer under `[answer]`.
+
+**Runs differ:** the number of rounds, the tools called and the wording of the answer depend on the model, so yours may differ from a classmate's.
+The agent loops at most 8 rounds; if it has no answer by then it prints `[!] ถึงขีดจำกัดจำนวนรอบแล้ว`.
+
+**On Windows** use Git Bash and change the first line to this (not tested on Windows):
+
+```bash
+python -m venv .venv && source .venv/Scripts/activate
+```
 
 ## Known limitations
 

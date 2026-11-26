@@ -29,6 +29,10 @@ vector search หามาตราที่เป็นข้อห้ามเ
 
 - LAB 4 ทดสอบ MCP tools ด้วย curl: หัวข้อ [LAB 4](#lab-4-ทดสอบ-mcp-tools-ด้วย-curl) และ [ผลทีละขั้น](docs/lab4-walkthrough.md)
 
+**LAB ของวันที่ 3 ในคอร์ส**
+
+- LAB 5 สร้าง agent ที่เชื่อมต่อกับ MCP server: หัวข้อ [LAB 5](#lab-5-สร้าง-agent-ที่เชื่อมต่อกับ-mcp-server)
+
 ผู้ใช้ Windows ที่ไม่เคยใช้ Git: ดู [คู่มือ Git Bash บน Windows](docs/git-bash-windows.md) (ยังไม่ได้ทดสอบบน Windows จริง)
 
 ## สิ่งที่ต่างจาก repo เดิม
@@ -77,10 +81,10 @@ README.en.md, LICENSE
 
 - [กราฟสำหรับ LAB 2](data/pdpa_knowledge_graph.json), [สคริปต์ของ LAB 2](labs/lab2/explore_graph.py) และ [ตัวบท 96 มาตรา](data/pdpa_full_text_v2.md)
 - [ตัวสร้างกราฟสำหรับ LAB 3](scripts/build_graph.py) และ [ตัวตรวจกราฟ](scripts/validate_graph.py)
-- [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [agent ของ LAB 8](labs/lab8/agent_pdpa_mcp.py) และ [ทดสอบด้วย curl](examples/mcp_curl.sh)
+- [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [agent ของ LAB 5](labs/lab8/agent_pdpa_mcp.py) และ [ทดสอบด้วย curl](examples/mcp_curl.sh)
 - [ภาพสถาปัตยกรรม](docs/fig1_architecture.png), [ภาพขั้นตอนค้น](docs/fig3_search_pipeline.png) และ [สคริปต์สร้างภาพ](docs/figures/make_figures.py)
 
-`labs/` มีสคริปต์ของ LAB 2 สคริปต์ของ LAB 4 สำหรับ Windows และโค้ดฝั่ง agent ของ LAB 8 สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2, LAB 3 และ LAB 4 อยู่ใน `docs/`
+`labs/` มีสคริปต์ของ LAB 2 สคริปต์ของ LAB 4 สำหรับ Windows และโค้ดฝั่ง agent ของ LAB 5 (อยู่ในโฟลเดอร์ `labs/lab8/`) สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2, LAB 3 และ LAB 4 อยู่ใน `docs/`
 
 ## สถาปัตยกรรม
 
@@ -341,6 +345,44 @@ python labs/lab4/call_tools.py --url <URL ที่ผู้สอนให้>/
 ถ้าใช้ server ที่รันเองตาม LAB 1 ไม่ต้องใส่ `--url`
 
 ผลของทุกขั้นพร้อมภาพ ดูที่ [docs/lab4-walkthrough.md](docs/lab4-walkthrough.md)
+
+## LAB 5: สร้าง Agent ที่เชื่อมต่อกับ MCP Server
+
+LAB นี้รัน agent ที่เขียนด้วย Python ใน [`labs/lab8/agent_pdpa_mcp.py`](labs/lab8/agent_pdpa_mcp.py) agent ขอรายการ tool จาก MCP server เอง
+แล้วให้โมเดลเรียก tool วนไปจนได้คำตอบ ชื่อโฟลเดอร์ `lab8` เป็นชื่อเดิมของโค้ด ไม่ตรงกับเลข LAB
+
+สิ่งที่ต้องมี:
+
+- โฟลเดอร์ของ repo นี้ และ Python
+- ไฟล์ `.env` ที่มี `OPENROUTER_API_KEY` (คัดลอก `.env.example` เป็น `.env` แล้วใส่ key) โมเดลฝั่ง agent ใช้เครดิตของ key นี้
+- MCP server ที่พร้อมใช้ คือ server ที่เริ่มไว้ตาม [LAB 1: เริ่มใช้งาน](#lab-1-เริ่มใช้งาน) หรือ server ที่ผู้สอนเปิดให้
+  ถ้าใช้ server ของผู้สอน ให้แก้บรรทัดนี้ในไฟล์ `.env`:
+
+```bash
+MCP_SERVER_URL=<URL ที่ผู้สอนให้>/mcp
+```
+
+**รัน agent** จากโฟลเดอร์ของ repo:
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements-agent.txt
+python labs/lab8/agent_pdpa_mcp.py "เก็บข้อมูลสุขภาพพนักงานได้ไหม ถ้าฝ่าฝืนมีโทษอะไร"
+```
+
+ถ้าเครื่องไม่มีคำสั่ง `python` ให้ใช้ `python3` ในบรรทัดแรก
+
+ผลที่ควรเห็น: บรรทัด `[MCP] ค้นพบ 5 tools` ตามด้วยบรรทัด `[step n] THINK` กับ `TOOL_USE` ของแต่ละรอบ
+แล้วจบด้วย `[step n] END_TURN` และคำตอบใต้บรรทัด `[answer]`
+
+**ผลแต่ละรอบต่างกันได้:** จำนวนรอบ tool ที่ถูกเรียก และข้อความของคำตอบ ขึ้นกับโมเดล จึงต่างจากของเพื่อนได้
+agent วนได้ไม่เกิน 8 รอบ ถ้าครบแล้วยังไม่ได้คำตอบ จะพิมพ์ `[!] ถึงขีดจำกัดจำนวนรอบแล้ว`
+
+**บน Windows** ใช้ Git Bash และเปลี่ยนบรรทัดแรกเป็นคำสั่งนี้ (ยังไม่ได้ทดสอบบน Windows)
+
+```bash
+python -m venv .venv && source .venv/Scripts/activate
+```
 
 ## ข้อจำกัดที่ทราบ
 
