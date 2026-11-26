@@ -65,6 +65,7 @@ scripts/
 labs/
   core/                  MCP client ขนาดเล็ก (httpx), tool registry (MCP inputSchema -> OpenAI tools), LLM client
   lab2/explore_graph.py อ่านและวิเคราะห์ไฟล์กราฟ: ชนิดของโหนดและเส้น, instance, เดินจากมาตราถึงโทษ (ไม่ต้องเปิด server)
+  lab4/call_tools.py     เรียก MCP tools ด้วย Python สำหรับ Windows (ทำอย่างเดียวกับ examples/mcp_curl.sh)
   lab8/agent_pdpa_mcp.py agent loop ที่ต่อเข้ากับ MCP server นี้
 examples/mcp_curl.sh     คุยกับ server ด้วย curl + jq
 docs/                    รูปสถาปัตยกรรมและ pipeline
@@ -79,7 +80,7 @@ README.en.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [agent ของ LAB 8](labs/lab8/agent_pdpa_mcp.py) และ [ทดสอบด้วย curl](examples/mcp_curl.sh)
 - [ภาพสถาปัตยกรรม](docs/fig1_architecture.png), [ภาพขั้นตอนค้น](docs/fig3_search_pipeline.png) และ [สคริปต์สร้างภาพ](docs/figures/make_figures.py)
 
-`labs/` มีสคริปต์ของ LAB 2 และโค้ดฝั่ง agent ของ LAB 8 สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2, LAB 3 และ LAB 4 อยู่ใน `docs/`
+`labs/` มีสคริปต์ของ LAB 2 สคริปต์ของ LAB 4 สำหรับ Windows และโค้ดฝั่ง agent ของ LAB 8 สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2, LAB 3 และ LAB 4 อยู่ใน `docs/`
 
 ## สถาปัตยกรรม
 
@@ -330,7 +331,14 @@ export MCP_SERVER_URL=<URL ที่ผู้สอนให้>/mcp
 
 **ผลแต่ละรอบต่างกันได้:** คีย์เวิร์ดมาจาก LLM ซึ่งไม่คงที่ คีย์เวิร์ดที่ได้จึงต่างจากของเพื่อนหรือจากเอกสารผลทีละขั้นได้
 
-บน Windows ให้รันทุกคำสั่งของ LAB นี้ใน Git Bash (ยังไม่ได้ทดสอบบน Windows)
+**บน Windows** ไม่ต้องใช้ `curl`, `jq` และ Git Bash ให้รัน [`labs/lab4/call_tools.py`](labs/lab4/call_tools.py) แทนสคริปต์ข้างบน
+สคริปต์นี้ส่งคำขอ 3 ครั้งเดียวกัน พิมพ์ผลรูปแบบเดียวกัน และใช้เฉพาะไลบรารีมาตรฐานของ Python (ยังไม่ได้ทดสอบบน Windows)
+
+```bash
+python labs/lab4/call_tools.py --url <URL ที่ผู้สอนให้>/mcp
+```
+
+ถ้าใช้ server ที่รันเองตาม LAB 1 ไม่ต้องใส่ `--url`
 
 ผลของทุกขั้นพร้อมภาพ ดูที่ [docs/lab4-walkthrough.md](docs/lab4-walkthrough.md)
 

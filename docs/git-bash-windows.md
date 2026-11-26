@@ -12,7 +12,7 @@
 - **Git** คือโปรแกรมที่ใช้ดึงโค้ดของคอร์สจาก GitHub ลงเครื่อง
 - **Git for Windows** คือชุดติดตั้ง Git สำหรับ Windows ในชุดนี้มีโปรแกรมชื่อ **Git Bash** มาด้วย
 - **Git Bash** คือหน้าต่างพิมพ์คำสั่งแบบเดียวกับ Terminal ของ macOS และ Linux คำสั่งของ LAB ในสไลด์เขียนแบบนี้
-  บางคำสั่ง เช่น `cmp`, `export` และการรันไฟล์ `.sh` ใช้ใน Command Prompt ของ Windows ไม่ได้ จึงให้พิมพ์ใน Git Bash แทน
+  บางคำสั่ง เช่น `cmp` ใช้ใน Command Prompt ของ Windows ไม่ได้ จึงให้พิมพ์ใน Git Bash แทน
 
 ## 2. ดาวน์โหลดตัวติดตั้ง
 
@@ -177,15 +177,7 @@ cd student-pdpa-graphrag-mcp-v2
 |---|---|
 | LAB 2 และ LAB 3 | ใช้ `python` แทน `python3` ต้องติดตั้ง Python ก่อน |
 | LAB 3 | คำสั่ง `cmp` มีใน Git Bash ไม่มีใน Command Prompt |
-| LAB 4 | ต้องมีคำสั่ง `jq` ซึ่ง Git Bash ไม่มีมาให้ (ยังไม่ได้ยืนยัน) |
-
-วิธีติดตั้ง `jq` ตามเว็บ https://jqlang.org/download/ คือเปิด PowerShell หรือ Command Prompt แล้วพิมพ์
-
-```sh
-winget install jqlang.jq
-```
-
-จากนั้นปิด Git Bash แล้วเปิดใหม่ และตรวจด้วย `jq --version` (ขั้นปิดแล้วเปิดใหม่ยังไม่ได้ยืนยัน)
+| LAB 4 | ไม่ต้องใช้ Git Bash: รัน `python labs/lab4/call_tools.py --url <URL ที่ผู้สอนให้>/mcp` แทนสคริปต์ `.sh` จึงไม่ต้องมี `curl` และ `jq` |
 
 ## 9. ปัญหาที่อาจเจอ
 
@@ -195,7 +187,6 @@ winget install jqlang.jq
 |---|---|---|
 | `git: command not found` | ติดตั้งไม่สำเร็จ หรือเปิด Git Bash ค้างไว้ตั้งแต่ก่อนติดตั้ง | ปิดแล้วเปิด Git Bash ใหม่ ถ้ายังเป็น ให้ติดตั้งใหม่ |
 | `python: command not found` | ยังไม่ได้ติดตั้ง Python หรือ Python ไม่อยู่ใน PATH | ติดตั้ง Python จาก python.org และเลือก "Add python.exe to PATH" ตอนติดตั้ง |
-| `jq: command not found` | ยังไม่ได้ติดตั้ง `jq` | ทำตามหัวข้อ 8 |
 | รันไฟล์ `.sh` แล้วขึ้นข้อความที่มี `\r` | ไฟล์ถูกเปลี่ยนท้ายบรรทัดเป็นแบบ Windows | ลบโฟลเดอร์ของโค้ด แล้ว clone ใหม่ด้วยคำสั่งในหัวข้อ 7 |
 | วางข้อความด้วย Ctrl+V ไม่ได้ | Git Bash ใช้ปุ่มวางคนละปุ่ม | กด Shift+Insert หรือคลิกขวาแล้วเลือก Paste |
 

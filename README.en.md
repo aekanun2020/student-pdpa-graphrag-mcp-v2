@@ -68,6 +68,7 @@ scripts/
 labs/
   core/                  minimal MCP client (httpx), tool registry (MCP inputSchema -> OpenAI tools), LLM client
   lab2/explore_graph.py reads and analyses the graph file: node and edge types, instances, a walk from a section to its penalty (no server needed)
+  lab4/call_tools.py     calls the MCP tools with Python, for Windows (does the same as examples/mcp_curl.sh)
   lab8/agent_pdpa_mcp.py an agent loop wired to this MCP server
 examples/mcp_curl.sh     talk to the server with plain curl + jq
 docs/                    architecture and pipeline figures
@@ -82,7 +83,7 @@ README.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [LAB 8 agent](labs/lab8/agent_pdpa_mcp.py) and [curl smoke test](examples/mcp_curl.sh)
 - [Architecture figure](docs/fig1_architecture.png), [search pipeline figure](docs/fig3_search_pipeline.png) and [figure generator](docs/figures/make_figures.py)
 
-`labs/` contains the LAB 2 script and the agent-side code for LAB 8; the course slides are not part of this repo; the step-by-step output of LAB 2, LAB 3 and LAB 4 is in `docs/`.
+`labs/` contains the LAB 2 script, the LAB 4 script for Windows and the agent-side code for LAB 8; the course slides are not part of this repo; the step-by-step output of LAB 2, LAB 3 and LAB 4 is in `docs/`.
 
 ## Architecture
 
@@ -353,7 +354,14 @@ The `search_pdpa` part of the script prints only `keywords`; it does not show th
 
 **Results differ from run to run:** the keywords come from an LLM, which is not deterministic, so your keywords can differ from a classmate's or from the step-by-step output.
 
-On Windows, run every command of this lab in Git Bash (not tested on Windows).
+**On Windows** you do not need `curl`, `jq` or Git Bash: run [`labs/lab4/call_tools.py`](labs/lab4/call_tools.py) instead of the script above.
+It sends the same 3 requests, prints the same output and uses only the Python standard library (not tested on Windows).
+
+```bash
+python labs/lab4/call_tools.py --url <URL from the instructor>/mcp
+```
+
+If you use the server you started in LAB 1, leave out `--url`.
 
 Output of every step, with images (in Thai): [docs/lab4-walkthrough.md](docs/lab4-walkthrough.md)
 
