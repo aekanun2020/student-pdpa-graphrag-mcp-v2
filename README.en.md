@@ -34,7 +34,7 @@ and the embedding model is multilingual.
 
 **Day-3 labs in the course**
 
-- LAB 5, build an agent connected to the MCP server: section [LAB 5](#lab-5-building-an-agent-connected-to-the-mcp-server)
+- LAB 5, build an agent connected to the MCP server: section [LAB 5](#lab-5-building-an-agent-connected-to-the-mcp-server) and the [step-by-step output](docs/lab5-walkthrough.md) (in Thai)
 
 Windows users new to Git: see the [Git Bash on Windows guide](docs/git-bash-windows.md) (in Thai; not yet tested on Windows)
 
@@ -87,7 +87,7 @@ README.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [LAB 5 agent](labs/lab8/agent_pdpa_mcp.py) and [curl smoke test](examples/mcp_curl.sh)
 - [Architecture figure](docs/fig1_architecture.png), [search pipeline figure](docs/fig3_search_pipeline.png) and [figure generator](docs/figures/make_figures.py)
 
-`labs/` contains the LAB 2 script, the LAB 4 script for Windows and the agent-side code for LAB 5 (in the folder `labs/lab8/`); the course slides are not part of this repo; the step-by-step output of LAB 2, LAB 3 and LAB 4 is in `docs/`.
+`labs/` contains the LAB 2 script, the LAB 4 script for Windows and the agent-side code for LAB 5 (in the folder `labs/lab8/`); the course slides are not part of this repo; the step-by-step output of LAB 2, LAB 3, LAB 4 and LAB 5 is in `docs/`.
 
 ## Architecture
 
@@ -406,6 +406,8 @@ The agent loops at most 8 rounds; if it has no answer by then it prints `[!] ถ
 ```bash
 python -m venv .venv && source .venv/Scripts/activate
 ```
+
+Output of every step, with images (in Thai): [docs/lab5-walkthrough.md](docs/lab5-walkthrough.md)
 
 ## Known limitations
 

@@ -31,7 +31,7 @@ vector search หามาตราที่เป็นข้อห้ามเ
 
 **LAB ของวันที่ 3 ในคอร์ส**
 
-- LAB 5 สร้าง agent ที่เชื่อมต่อกับ MCP server: หัวข้อ [LAB 5](#lab-5-สร้าง-agent-ที่เชื่อมต่อกับ-mcp-server)
+- LAB 5 สร้าง agent ที่เชื่อมต่อกับ MCP server: หัวข้อ [LAB 5](#lab-5-สร้าง-agent-ที่เชื่อมต่อกับ-mcp-server) และ [ผลทีละขั้น](docs/lab5-walkthrough.md)
 
 ผู้ใช้ Windows ที่ไม่เคยใช้ Git: ดู [คู่มือ Git Bash บน Windows](docs/git-bash-windows.md) (ยังไม่ได้ทดสอบบน Windows จริง)
 
@@ -84,7 +84,7 @@ README.en.md, LICENSE
 - [MCP server](mcp_server_rag.py), [Docker Compose](docker-compose.yml), [agent ของ LAB 5](labs/lab8/agent_pdpa_mcp.py) และ [ทดสอบด้วย curl](examples/mcp_curl.sh)
 - [ภาพสถาปัตยกรรม](docs/fig1_architecture.png), [ภาพขั้นตอนค้น](docs/fig3_search_pipeline.png) และ [สคริปต์สร้างภาพ](docs/figures/make_figures.py)
 
-`labs/` มีสคริปต์ของ LAB 2 สคริปต์ของ LAB 4 สำหรับ Windows และโค้ดฝั่ง agent ของ LAB 5 (อยู่ในโฟลเดอร์ `labs/lab8/`) สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2, LAB 3 และ LAB 4 อยู่ใน `docs/`
+`labs/` มีสคริปต์ของ LAB 2 สคริปต์ของ LAB 4 สำหรับ Windows และโค้ดฝั่ง agent ของ LAB 5 (อยู่ในโฟลเดอร์ `labs/lab8/`) สไลด์ของคอร์สไม่ได้อยู่ใน repo นี้ ส่วนผลทีละขั้นของ LAB 2, LAB 3, LAB 4 และ LAB 5 อยู่ใน `docs/`
 
 ## สถาปัตยกรรม
 
@@ -383,6 +383,8 @@ agent วนได้ไม่เกิน 8 รอบ ถ้าครบแล�
 ```bash
 python -m venv .venv && source .venv/Scripts/activate
 ```
+
+ผลของทุกขั้นพร้อมภาพ ดูที่ [docs/lab5-walkthrough.md](docs/lab5-walkthrough.md)
 
 ## ข้อจำกัดที่ทราบ
 
