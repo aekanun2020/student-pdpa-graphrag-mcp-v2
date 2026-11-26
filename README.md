@@ -317,52 +317,16 @@ LAB นี้คุยกับ MCP server โดยตรงด้วย `curl`
 export MCP_SERVER_URL=<URL ที่ผู้สอนให้>/mcp
 ```
 
-**ขั้นที่ 1 รันสคริปต์** [`examples/mcp_curl.sh`](examples/mcp_curl.sh) ส่งคำขอ 3 ครั้ง คือ `tools/list`, `get_penalty` ของมาตรา 26 และ `search_pdpa`
+**รันสคริปต์** [`examples/mcp_curl.sh`](examples/mcp_curl.sh) ส่งคำขอ 3 ครั้ง คือ `tools/list`, `get_penalty` ของมาตรา 26 และ `search_pdpa`
 
 ```bash
 ./examples/mcp_curl.sh
 ```
 
 ผลที่ควรเห็น: ชื่อ tool 5 ตัว โทษของ `sec_26` 2 รายการ และ `keywords` ที่มี `low_level` ไม่เกิน 8 คำ กับ `high_level` ไม่เกิน 6 คำ
-ส่วนของ `search_pdpa` ในสคริปต์พิมพ์เฉพาะ `keywords` ยังไม่ได้แสดง context ที่ server ส่งกลับ
+ส่วนของ `search_pdpa` ในสคริปต์พิมพ์เฉพาะ `keywords` ไม่ได้แสดง context ที่ server ส่งกลับ
 
-**ขั้นที่ 2 เรียก `search_pdpa` เอง แล้วเก็บผลทั้งก้อนลงไฟล์** ไฟล์นี้ใช้ต่อในขั้นที่ 3 โฟลเดอร์ `build/` ไม่ถูก git ติดตาม
-
-```bash
-mkdir -p build
-curl -s -X POST "${MCP_SERVER_URL:-http://localhost:8100/mcp}" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search_pdpa","arguments":{"query":"เก็บข้อมูลชีวภาพ ลายนิ้วมือ ข้อมูลอ่อนไหว","top_k":5}}}' \
-  | jq '.result.content[0].text | fromjson' > build/lab4_search.json
-jq '{keywords, profile_results_count, chunk_results_count}' build/lab4_search.json
-```
-
-คำสั่งสุดท้ายพิมพ์คีย์เวิร์ด จำนวน profile (`profile_results_count`) และจำนวนตัวบทเต็ม (`chunk_results_count`)
-ขั้นนี้เรียก LLM 1 ครั้งเพื่อแตกคีย์เวิร์ด จึงใช้เวลานานกว่าคำสั่งอื่น (การทดสอบ 2 ครั้งใช้ 7 และ 42 วินาที)
-
-**ผลแต่ละรอบต่างกันได้:** คีย์เวิร์ดมาจาก LLM ซึ่งไม่คงที่ จำนวนคีย์เวิร์ด จำนวน profile และลำดับของมาตราจึงต่างจากของเพื่อนหรือจากสไลด์ได้
-
-**ถ้า `low_level` เป็นคำถามเดิมและ `high_level` ว่าง** แปลว่ารอบนั้น server เรียก LLM ไม่สำเร็จ แล้วใช้คำถามที่ตัดตามช่องว่างแทนคีย์เวิร์ด
-server ไม่แจ้งข้อผิดพลาดในกรณีนี้ ให้รันคำสั่งซ้ำ ถ้ายังเป็นเหมือนเดิม ให้ตรวจ `OPENROUTER_API_KEY` ในไฟล์ `.env`
-
-**ขั้นที่ 3 ดู 3 ส่วนของ context** ขั้นนี้ไม่เรียก server เพิ่ม แยก context ออกมาเป็นไฟล์ข้อความ แล้วดูหัวข้อของแต่ละส่วน
-
-```bash
-jq -r '.context' build/lab4_search.json > build/lab4_context.txt
-grep -n '^## \|^### ' build/lab4_context.txt
-```
-
-| ส่วน | หัวข้อในไฟล์ | มาจากขั้นใดใน [การค้นทำงานอย่างไร](#การค้นทำงานอย่างไร) |
-|---|---|---|
-| 1 | `## ความรู้จาก Knowledge Graph (PDPA)` | profile ที่ค้นเจอ (ขั้นที่ 2 ของการค้น) แต่ละรายการขึ้นต้นด้วย `- ` ตามด้วย id ของโหนด |
-| 2 | `### ข้อมูลเชื่อมโยง (multi-hop graph):` | ผลเดินกราฟจาก seed (ขั้นที่ 3 และ 4 ของการค้น) แต่ละบรรทัดขึ้นต้นด้วย `[hop1]` หรือ `[hop2]` |
-| 3 | `## เนื้อหาต้นฉบับ PDPA (Original Text)` | ตัวบทเต็มของมาตราที่ค้นเจอ (ขั้นที่ 5 ของการค้น) |
-
-ส่วนที่ 1 และ 3 มาจากการค้นด้วยความหมาย (vector) ส่วนที่ 2 มาจากการเดินกราฟ context จึงเป็นแบบ hybrid
-
-วิธีอ่านบรรทัดของส่วนที่ 2: `[hop1] sec26_ex1 ←GRANTS_EXEMPTION— sec_26` แปลว่าเดินจากโหนด `sec26_ex1` ไปถึง `sec_26` ใน 1 ทอด
-ผ่านเส้นประเภท `GRANTS_EXEMPTION` ลูกศรชี้ตามทิศของเส้นในกราฟ ในตัวอย่างนี้เส้นชี้จาก `sec_26` มาหา `sec26_ex1` การเดินจึงย้อนทิศลูกศร
+**ผลแต่ละรอบต่างกันได้:** คีย์เวิร์ดมาจาก LLM ซึ่งไม่คงที่ คีย์เวิร์ดที่ได้จึงต่างจากของเพื่อนหรือจากเอกสารผลทีละขั้นได้
 
 บน Windows ให้รันทุกคำสั่งของ LAB นี้ใน Git Bash (ยังไม่ได้ทดสอบบน Windows)
 

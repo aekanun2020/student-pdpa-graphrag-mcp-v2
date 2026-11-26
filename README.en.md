@@ -340,7 +340,7 @@ If you use the instructor's server, set its URL once in the terminal you will us
 export MCP_SERVER_URL=<URL from the instructor>/mcp
 ```
 
-**Step 1: run the script.** [`examples/mcp_curl.sh`](examples/mcp_curl.sh) sends 3 requests: `tools/list`, `get_penalty` for section 26, and `search_pdpa`.
+**Run the script.** [`examples/mcp_curl.sh`](examples/mcp_curl.sh) sends 3 requests: `tools/list`, `get_penalty` for section 26, and `search_pdpa`.
 
 ```bash
 ./examples/mcp_curl.sh
@@ -349,43 +349,7 @@ export MCP_SERVER_URL=<URL from the instructor>/mcp
 Expected: 5 tool names, 2 penalties for `sec_26`, and `keywords` with at most 8 `low_level` and at most 6 `high_level` entries.
 The `search_pdpa` part of the script prints only `keywords`; it does not show the context the server returns.
 
-**Step 2: call `search_pdpa` yourself and save the whole result to a file.** Step 3 uses this file. The `build/` folder is not tracked by git.
-
-```bash
-mkdir -p build
-curl -s -X POST "${MCP_SERVER_URL:-http://localhost:8100/mcp}" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search_pdpa","arguments":{"query":"เก็บข้อมูลชีวภาพ ลายนิ้วมือ ข้อมูลอ่อนไหว","top_k":5}}}' \
-  | jq '.result.content[0].text | fromjson' > build/lab4_search.json
-jq '{keywords, profile_results_count, chunk_results_count}' build/lab4_search.json
-```
-
-The last command prints the keywords, the number of profiles (`profile_results_count`) and the number of full section texts (`chunk_results_count`).
-This step makes one LLM call for keyword extraction, so it takes longer than the other commands (two test runs took 7 and 42 seconds).
-
-**Results differ from run to run:** the keywords come from an LLM, which is not deterministic, so the keyword counts, the number of profiles and the order of sections can differ from a classmate's or from the slides.
-
-**If `low_level` is the question itself and `high_level` is empty,** the server's LLM call failed in that run and the server used the question split on spaces instead of keywords.
-The server reports no error in this case. Run the command again; if it stays the same, check `OPENROUTER_API_KEY` in `.env`.
-
-**Step 3: look at the 3 parts of the context.** This step makes no further server calls. Extract the context into a text file and list the headings of its parts:
-
-```bash
-jq -r '.context' build/lab4_search.json > build/lab4_context.txt
-grep -n '^## \|^### ' build/lab4_context.txt
-```
-
-| Part | Heading in the file (in Thai) | Which step of [How retrieval works](#how-retrieval-works) it comes from |
-|---|---|---|
-| 1 | `## ความรู้จาก Knowledge Graph (PDPA)` | the profiles found (retrieval step 2); each entry starts with `- ` followed by a node id |
-| 2 | `### ข้อมูลเชื่อมโยง (multi-hop graph):` | graph traversal from the seeds (retrieval steps 3 and 4); each line starts with `[hop1]` or `[hop2]` |
-| 3 | `## เนื้อหาต้นฉบับ PDPA (Original Text)` | full text of the sections found (retrieval step 5) |
-
-Parts 1 and 3 come from semantic (vector) search and part 2 from graph traversal, so the context is hybrid.
-
-How to read a line of part 2: `[hop1] sec26_ex1 ←GRANTS_EXEMPTION— sec_26` means the walk went from node `sec26_ex1` to `sec_26` in 1 hop
-over a `GRANTS_EXEMPTION` edge. The arrow follows the edge's direction in the graph; here the edge points from `sec_26` to `sec26_ex1`, so the walk went against the arrow.
+**Results differ from run to run:** the keywords come from an LLM, which is not deterministic, so your keywords can differ from a classmate's or from the step-by-step output.
 
 On Windows, run every command of this lab in Git Bash (not tested on Windows).
 
