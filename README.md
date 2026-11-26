@@ -29,6 +29,8 @@ vector search หามาตราที่เป็นข้อห้ามเ
 
 - LAB 4 ทดสอบ MCP tools ด้วย curl: หัวข้อ [LAB 4](#lab-4-ทดสอบ-mcp-tools-ด้วย-curl) และ [ผลทีละขั้น](docs/lab4-walkthrough.md)
 
+ผู้ใช้ Windows ที่ไม่เคยใช้ Git: ดู [คู่มือ Git Bash บน Windows](docs/git-bash-windows.md) (ยังไม่ได้ทดสอบบน Windows จริง)
+
 ## สิ่งที่ต่างจาก repo เดิม
 
 | เรื่อง | repo เดิม | repo นี้ |

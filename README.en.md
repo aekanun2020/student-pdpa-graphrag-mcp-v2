@@ -32,6 +32,8 @@ and the embedding model is multilingual.
 
 - LAB 4, test the MCP tools with curl: section [LAB 4](#lab-4-testing-the-mcp-tools-with-curl) and the [step-by-step output](docs/lab4-walkthrough.md) (in Thai)
 
+Windows users new to Git: see the [Git Bash on Windows guide](docs/git-bash-windows.md) (in Thai; not yet tested on Windows)
+
 ## What changed from the original
 
 | Area | Original | This version |
